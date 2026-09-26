@@ -112,22 +112,53 @@ src/
 
 ## 🚀 Getting Started
 
-### 1. Prerequisites
+### ⚡ Quick Start (Instant Project Setup)
+
+You can bootstrap a brand new project in seconds using the setup script:
+
+```bash
+# Via curl (interactive)
+curl -fsSL https://raw.githubusercontent.com/khacvux/nest-ddd-starter-kit/main/create-project.sh | bash
+
+# Or specify project name directly
+curl -fsSL https://raw.githubusercontent.com/khacvux/nest-ddd-starter-kit/main/create-project.sh | bash -s my-nest-app
+```
+
+The script automatically:
+- Clones the starter kit
+- Renames the project in `package.json`
+- Generates a customized `.env` with unique database credentials
+- Configures isolated `docker-compose.yml` service and container names
+- Reinitializes a clean Git repository (`git init`)
+- Optionally installs dependencies (`npm`, `pnpm`, or `yarn`)
+- Optionally boots up the PostgreSQL container with Docker
+
+---
+
+### 🛠️ Manual Setup
+
+If you prefer to clone and set up manually:
+
+#### 1. Prerequisites
 - Node.js >= 20.x
 - Docker & Docker Compose (for PostgreSQL)
 
-### 2. Installation
+#### 2. Clone & Install
 ```bash
-# Install dependencies
-npm install
+git clone https://github.com/khacvux/nest-ddd-starter-kit.git my-nest-app
+cd my-nest-app
 
-# Copy environment variables
+# Or run the local generator
+./create-project.sh
+
+# Or install manually
+npm install
 cp .env.example .env
 ```
 
-### 3. Start Database
+#### 3. Start Database
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### 4. Run Application
