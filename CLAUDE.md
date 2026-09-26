@@ -11,7 +11,7 @@ This project is an enterprise-grade NestJS starter kit adhering strictly to **Do
 - **Infrastructure Layer**: Implements ports via adapters. Contains ORM entities (`*.orm-entity.ts`).
 - **Interfaces Layer**: HTTP Controllers validate DTOs and delegate to Use Cases.
 
-Read `.agents/rules/architecture.md` for strict architectural rules.
+Read `.agents/rules/architecture.md` for strict architectural rules (CQRS, UoW, 3-tier validation, testing matrix).
 Read `.agents/skills/ddd-nestjs/SKILL.md` for complete step-by-step implementation templates.
 
 ---
@@ -44,9 +44,12 @@ npm run format         # Format code with Prettier
 
 ---
 
-## 3. Key Patterns & Conventions
+## 3. Key Enterprise Patterns & Conventions
+- **CQRS**: Commands mutate state through aggregates; Queries may project directly to Read DTOs.
+- **Events**: Domain Events stay within the bounded context; Integration Events use the Transactional Outbox Pattern before sending to external brokers (RabbitMQ/Kafka).
+- **Transactions**: Managed exclusively via the `IUnitOfWork` port (`UNIT_OF_WORK` token) in Application Use Cases. Never import TypeORM `QueryRunner` into use cases.
+- **Validation**: 3-tier strategy: Syntactic (DTOs / 400), Semantic Invariants (Value Objects / 422), Contextual (Use Cases / 409 & 404).
 - **Dependency Injection**: Always use `Symbol` tokens declared in `src/shared/constants/injection-tokens.ts`.
-- **Validation**: Use `class-validator` and `class-transformer` in Request DTOs.
-- **Error Handling**: Throw domain errors extending `DomainError`. The global `DomainExceptionFilter` maps them to HTTP responses automatically.
+- **Testing**: Zero mocks in Domain unit tests; mock interface ports in Application tests; real DB in Infrastructure tests; `supertest` in E2E tests.
 - **ORM Separation**: Never name TypeORM entities `*.entity.ts`. Always use `*.orm-entity.ts` and map to/from domain entities using `*.mapper.ts`.
 - **API Documentation**: Interactive Swagger docs available at `http://localhost:3000/api/docs`.
